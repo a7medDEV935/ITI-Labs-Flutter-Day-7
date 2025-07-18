@@ -1,6 +1,6 @@
 flutter_native_splash:
   image: assets/images/splash-app-icon.png
-  # image_dark: assets/images/splash-app-icon-dark.png
+  image_dark: assets/images/app-icon.png
   color: "#FFFFFF"
   color_dark: "#0F1A24"
   android_gravity: center
