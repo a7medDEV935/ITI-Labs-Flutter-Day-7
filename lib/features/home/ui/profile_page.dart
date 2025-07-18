@@ -7,16 +7,25 @@ class ProfilePage extends StatefulWidget {
   State<ProfilePage> createState() => _ProfilePageState();
 }
 
-class _ProfilePageState extends State<ProfilePage> {
+class _ProfilePageState extends State<ProfilePage>
+    with SingleTickerProviderStateMixin {
   String? _name;
   String? _email;
   String? _job;
   String? _gender;
   String? _address;
 
+  late AnimationController _controller;
+  late Animation<double> _animation;
+
   @override
   void initState() {
     super.initState();
+    _controller = AnimationController(
+      vsync: this,
+      duration: Duration(milliseconds: 800),
+    );
+    _animation = CurvedAnimation(parent: _controller, curve: Curves.easeIn);
     _loadData();
   }
 
@@ -28,17 +37,32 @@ class _ProfilePageState extends State<ProfilePage> {
     final gender = await SharedPreferenceDB.getString("gender");
     final address = await SharedPreferenceDB.getString("address");
     setState(() {
-      _name = "$first $last";
-      _email = email;
-      _job = job;
-      _gender = gender;
-      _address = address;
+      String firstName = (first ?? '').trim();
+      String lastName = (last ?? '').trim();
+      if (firstName.isEmpty && lastName.isEmpty) {
+        _name = null;
+      } else {
+        _name = ('$firstName $lastName').trim();
+      }
+      _email = (email == null || email.trim().isEmpty) ? "N/A" : email;
+      _job = (job == null || job.trim().isEmpty) ? "N/A" : job;
+      _gender = (gender == null || gender.trim().isEmpty) ? "N/A" : gender;
+      _address = (address == null || address.trim().isEmpty) ? "N/A" : address;
     });
+    _controller.forward();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
+    return FadeTransition(
+      opacity: _animation,
+      child: SingleChildScrollView(
         padding: const EdgeInsets.all(20),
         child: Column(
           children: [
@@ -77,7 +101,8 @@ class _ProfilePageState extends State<ProfilePage> {
             completedTaskTile("Book Appointment"),
           ],
         ),
-      );
+      ),
+    );
   }
 
   Widget sectionTitle(String title) {
@@ -134,26 +159,26 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 }
 
-  Widget completedTaskTile(String title) {
-    return Container(
-      margin: const EdgeInsets.only(top: 12),
-      padding: const EdgeInsets.all(14),
-      decoration: BoxDecoration(
-        color: Colors.white10,
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: Row(
-        children: [
-          const Icon(Icons.check_circle, color: Colors.white, size: 22),
-          const SizedBox(width: 14),
-          Text(
-            title,
-            style: const TextStyle(
-              color: Colors.white,
-              fontSize: 15,
-            ),
-          )
-        ],
-      ),
-    );
-  }
+Widget completedTaskTile(String title) {
+  return Container(
+    margin: const EdgeInsets.only(top: 12),
+    padding: const EdgeInsets.all(14),
+    decoration: BoxDecoration(
+      color: Colors.white10,
+      borderRadius: BorderRadius.circular(12),
+    ),
+    child: Row(
+      children: [
+        const Icon(Icons.check_circle, color: Colors.white, size: 22),
+        const SizedBox(width: 14),
+        Text(
+          title,
+          style: const TextStyle(
+            color: Colors.white,
+            fontSize: 15,
+          ),
+        )
+      ],
+    ),
+  );
+}
