@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:fourth_day/core/db/shared_preference_db.dart';
 
+import '../../../core/constants/app_colors.dart';
+import '../../../core/constants/app_string.dart';
+
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
   @override
@@ -15,6 +18,8 @@ class _ProfilePageState extends State<ProfilePage>
   String? _gender;
   String? _address;
 
+  int? _favouritePostsCount;
+
   late AnimationController _controller;
   late Animation<double> _animation;
 
@@ -27,6 +32,7 @@ class _ProfilePageState extends State<ProfilePage>
     );
     _animation = CurvedAnimation(parent: _controller, curve: Curves.easeIn);
     _loadData();
+    _loadFavouritePostsCount();
   }
 
   Future<void> _loadData() async {
@@ -50,6 +56,13 @@ class _ProfilePageState extends State<ProfilePage>
       _address = (address == null || address.trim().isEmpty) ? "N/A" : address;
     });
     _controller.forward();
+  }
+
+  Future<void> _loadFavouritePostsCount() async {
+    final count = await SharedPreferenceDB.getInt("favourite_posts_count") ?? 0;
+    setState(() {
+      _favouritePostsCount = count;
+    });
   }
 
   @override
@@ -99,6 +112,14 @@ class _ProfilePageState extends State<ProfilePage>
             completedTaskTile("Grocery Shopping"),
             completedTaskTile("Pay Bills"),
             completedTaskTile("Book Appointment"),
+            const SizedBox(height: 30),
+            sectionTitle('Favourite posts'),
+            ListTile(
+              title: Text("Favourite Posts  $_favouritePostsCount" , style: TextStyle(color: AppColors.kOnPrimary),),
+              subtitle: Text("View all favourite posts" , style: TextStyle(color: AppColors.kOnPrimary),),
+              trailing: Icon(Icons.arrow_forward_ios),
+              onTap: () => Navigator.pushNamed(context, AppString.favouritePosts),
+            )
           ],
         ),
       ),

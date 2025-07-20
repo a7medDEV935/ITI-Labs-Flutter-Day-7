@@ -53,6 +53,11 @@ class CustomDrawer extends StatelessWidget {
             onTap: () => onTap!(2),
           ),
           ListTile(
+            leading: Icon(Icons.article, color: AppColors.kOnPrimary),
+            title: Text('Posts', style: TextStyle(color: AppColors.kOnPrimary)),
+            onTap: () => onTap!(3),
+          ),
+          ListTile(
             leading: Icon(Icons.logout, color: AppColors.kOnPrimary),
             title:
                 Text('Log out', style: TextStyle(color: AppColors.kOnPrimary)),

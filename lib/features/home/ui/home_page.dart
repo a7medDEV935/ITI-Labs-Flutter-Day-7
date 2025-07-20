@@ -3,6 +3,7 @@ import 'package:fourth_day/features/home/ui/widgets/drawer.dart';
 
 import '../../../core/constants/app_colors.dart';
 import '../../../core/db/shared_preference_db.dart';
+import '../../posts/ui/posts_page.dart';
 import 'profile_page.dart';
 import 'tasks_page.dart';
 import 'widgets/bottom_nav_bar.dart';
@@ -28,6 +29,7 @@ class _HomePageState extends State<HomePage> {
         HomeWidget(name: userName),
         TasksPage(),
         ProfilePage(),
+        PostsPage(),
       ];
 
   @override
@@ -61,7 +63,7 @@ class _HomePageState extends State<HomePage> {
       backgroundColor: AppColors.kPrimary,
       body: _screens[_selectedIndex],
       bottomNavigationBar: MyBottomNavBar(
-        currentIndex: _selectedIndex,
+        currentIndex: _selectedIndex > 2 ? 0 : _selectedIndex,
         onTap: _onItemTapped,
       ),
     );

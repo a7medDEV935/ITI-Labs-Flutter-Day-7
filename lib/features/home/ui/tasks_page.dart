@@ -67,9 +67,11 @@ class _TasksPageState extends State<TasksPage>
     if (_startTime == null || _endTime == null) {
       await _selectTimeRange();
       if (_startTime == null || _endTime == null) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Please select a valid time range')),
-        );
+        if(mounted){
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Please select a valid time range')),
+          );
+        }
         return;
       }
     }
@@ -86,9 +88,11 @@ class _TasksPageState extends State<TasksPage>
     taskRepo.addTask(task);
     newTasks.add(task);
 
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Task added successfully')),
-    );
+    if(mounted){
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Task added successfully')),
+      );
+    }
     controller.clear();
     setState(() {
       _startTime = null;

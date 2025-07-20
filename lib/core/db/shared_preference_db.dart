@@ -1,8 +1,11 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../features/posts/data/models/post_model.dart';
 class SharedPreferenceDB {
-   /// Removes a value from SharedPreferences with given [key].
+  /// Removes a value from SharedPreferences with given [key].
   static removeData(String key) async {
     debugPrint('SharedPrefHelper : data with key : $key has been removed');
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
@@ -59,6 +62,22 @@ class SharedPreferenceDB {
     debugPrint('SharedPrefHelper : getString with key : $key');
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     return sharedPreferences.getString(key) ?? '';
+  }
+
+  static Future<void> saveFavoritePosts(List<PostModel> posts) async {
+    final prefs = await SharedPreferences.getInstance();
+    final encoded = jsonEncode(posts.map((p) => p.toJson()).toList());
+    await prefs.setString('favorite_posts', encoded);
+  }
+
+  static Future<List<PostModel>> loadFavoritePosts() async {
+    final prefs = await SharedPreferences.getInstance();
+    final jsonString = prefs.getString('favorite_posts');
+
+    if (jsonString == null) return [];
+
+    final List decoded = jsonDecode(jsonString);
+    return decoded.map((json) => PostModel.fromJson(json)).toList();
   }
 
 }

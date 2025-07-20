@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fourth_day/features/posts/ui/favourite_posts.dart';
 
 import 'core/constants/app_string.dart';
 import 'core/db/shared_preference_db.dart';
@@ -28,6 +29,7 @@ class MyApp extends StatelessWidget {
         AppString.welcome: (context) => const WelcomePage(),
         AppString.createAccount: (context) => const AccountPage(),
         AppString.home: (context) => const HomePage(),
+        AppString.favouritePosts: (context) => FavouritePosts(),
       },
     );
   }
